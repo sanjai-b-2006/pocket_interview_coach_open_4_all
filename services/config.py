@@ -20,6 +20,10 @@ class Settings:
     judge_base_url: str = os.getenv("JUDGE_BASE_URL", "") or base_url
     judge_model: str = os.getenv("JUDGE_MODEL", "openai/gpt-4o-mini")
 
+    # If true, always show the "enter your own OpenRouter key" gate even when a default key is set.
+    # If no default key is set at all, the gate is shown automatically regardless of this flag.
+    require_user_key: bool = os.getenv("REQUIRE_USER_KEY", "false").lower() in ("1", "true", "yes")
+
     asr_device: str = os.getenv("ASR_DEVICE", "cpu")
     asr_model_size: str = os.getenv("ASR_MODEL_SIZE", "base")
     asr_compute_type: str = os.getenv("ASR_COMPUTE_TYPE", "int8")

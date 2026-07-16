@@ -10,6 +10,7 @@ from streamlit_mic_recorder import mic_recorder
 from services import export as export_service
 from services import interview
 from services import resume as resume_service
+from services.config import settings
 from services.judge import JudgeError, judge_client
 from services.llm import LLMOverride, PERSONAS, SESSION_TYPES
 from services.models import InterviewSession, Question
@@ -129,6 +130,53 @@ def get_override() -> LLMOverride:
     )
 
 
+def user_key() -> str:
+    """The visitor's own OpenRouter key, if they entered one (used for coach AND judge)."""
+    return st.session_state.byok_api_key or ""
+
+
+def judge_available() -> bool:
+    return judge_client.is_configured(api_key=user_key())
+
+
+def judge_kwargs() -> dict:
+    """Route the judge through the visitor's key when they supplied one."""
+    if user_key():
+        return {
+            "api_key": user_key(),
+            "base_url": st.session_state.byok_base_url or settings.judge_base_url,
+            "model": settings.judge_model,
+        }
+    return {}
+
+
+def api_key_gate():
+    """Opening screen: if there's no usable key, ask each visitor for their own OpenRouter key."""
+    has_default = bool(settings.api_key)
+    if user_key() or (has_default and not settings.require_user_key):
+        return  # good to go — either the visitor entered a key, or the app has a default
+    st.markdown('<h1 class="gradient-text">Pocket Interview Coach</h1>', unsafe_allow_html=True)
+    st.write("Practice interviews out loud and get scored on **what you say and how you say it.**")
+    with st.container(border=True):
+        st.markdown("#### 🔑 Enter your OpenRouter API key to start")
+        st.caption(
+            "This app runs on your own key so it's free for everyone. Your key stays in this browser "
+            "session only — it's never saved or shared."
+        )
+        key = st.text_input("OpenRouter API key", type="password", placeholder="sk-or-...")
+        st.markdown(
+            "Don't have one? Get a free key at "
+            "[openrouter.ai/keys](https://openrouter.ai/keys) (takes a minute)."
+        )
+        if st.button("Start practicing →", type="primary", use_container_width=True):
+            if key.strip():
+                st.session_state.byok_api_key = key.strip()
+                st.rerun()
+            else:
+                st.error("Please paste your OpenRouter key to continue.")
+    st.stop()
+
+
 def render_sidebar():
     with st.sidebar:
         st.markdown("### 🎤 Pocket Interview Coach")
@@ -139,22 +187,22 @@ def render_sidebar():
                 st.session_state.current_index = 0
                 st.session_state.current_feedback = None
                 st.rerun()
-        with st.expander("⚙️ Bring your own API key"):
-            st.caption("Leave blank to use the app's default key/model.")
+        with st.expander("⚙️ Your OpenRouter key & models"):
+            st.caption("Your key runs both the coach and the judge. Stored in this session only.")
             st.session_state.byok_api_key = st.text_input(
-                "API key", value=st.session_state.byok_api_key, type="password"
-            )
-            st.session_state.byok_base_url = st.text_input(
-                "Base URL", value=st.session_state.byok_base_url, placeholder="https://openrouter.ai/api/v1"
+                "OpenRouter API key", value=st.session_state.byok_api_key, type="password", placeholder="sk-or-..."
             )
             st.session_state.byok_model = st.text_input(
-                "Model", value=st.session_state.byok_model, placeholder="google/gemma-4-26b-a4b-it"
+                "Coach model", value=st.session_state.byok_model, placeholder="google/gemma-4-26b-a4b-it"
+            )
+            st.session_state.byok_base_url = st.text_input(
+                "Base URL (advanced)", value=st.session_state.byok_base_url, placeholder="https://openrouter.ai/api/v1"
             )
         st.markdown("---")
-        judge_on = judge_client.is_configured()
+        judge_on = judge_available()
         st.caption(
             "🧠 **Coach:** Gemma 4\n\n"
-            + ("🔥 **Hiring manager:** independent model (OpenRouter)" if judge_on else "🔥 Verdict: _add JUDGE_API_KEY_")
+            + ("⚖️ **Hiring manager:** independent model" if judge_on else "⚖️ Verdict: _add your key_")
         )
 
 
@@ -287,7 +335,7 @@ def countdown_timer(seconds: int, key: str):
 
 def level_up_answer(question: Question, key: str):
     """Independent-model rewrite of the candidate's own answer into a stronger version."""
-    if not judge_client.is_configured():
+    if not judge_available():
         return
     answer = question.answer
     if not answer:
@@ -301,7 +349,7 @@ def level_up_answer(question: Question, key: str):
         with st.spinner("Rewriting your answer..."):
             try:
                 answer.improved_answer = judge_client.rewrite_answer(
-                    question.text, answer.transcript, st.session_state.session.role
+                    question.text, answer.transcript, st.session_state.session.role, **judge_kwargs()
                 )
             except JudgeError as exc:
                 st.warning(f"Couldn't reach the judge model for the rewrite: {exc}")
@@ -311,23 +359,23 @@ def level_up_answer(question: Question, key: str):
 
 def render_hiring_verdict(session: InterviewSession):
     """Independent hire/no-hire call from a second model (a true second opinion)."""
-    if not judge_client.is_configured():
+    if not judge_available():
         with st.container(border=True):
-            st.markdown("### 🔥 Independent hiring verdict")
+            st.markdown("### ⚖️ Independent hiring verdict")
             st.caption(
-                "Powered by an independent second model — a second opinion independent "
-                "beyond the Gemma 4 coach. Add a `JUDGE_API_KEY` (any OpenRouter key) to enable it."
+                "An independent second model reviews the whole interview and makes a real hire / "
+                "no-hire call — enter your OpenRouter key to enable it."
             )
         return
 
     if session.hiring_verdict is None:
         with st.container(border=True):
-            st.markdown("### 🔥 Independent hiring verdict")
+            st.markdown("### ⚖️ Independent hiring verdict")
             st.caption("An independent second model reviews the whole interview and makes a real call.")
             if st.button("Get the hiring manager's verdict", type="primary"):
                 with st.spinner("The hiring manager is deliberating..."):
                     try:
-                        session.hiring_verdict = judge_client.hiring_verdict(session)
+                        session.hiring_verdict = judge_client.hiring_verdict(session, **judge_kwargs())
                     except JudgeError as exc:
                         st.warning(f"Couldn't reach the judge model: {exc}")
                         return
@@ -809,6 +857,7 @@ def report_page():
 
 
 init_state()
+api_key_gate()
 render_sidebar()
 
 if st.session_state.page == "setup":
