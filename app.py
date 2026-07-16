@@ -341,9 +341,10 @@ def level_up_answer(question: Question, key: str):
     if not answer:
         return
     if answer.improved_answer:
-        with st.expander("⚡ Level up this answer", expanded=False):
-            st.markdown("**Your answer, leveled up by an independent model:**")
-            st.success(answer.improved_answer)
+        # Render inline (not in an expander) — this is sometimes called inside the report's
+        # per-question expander, and Streamlit forbids nesting expanders.
+        st.markdown("**⚡ Your answer, leveled up by an independent model:**")
+        st.success(answer.improved_answer)
         return
     if st.button("⚡ Level up this answer", key=f"levelup_{key}", help="Rewrite your answer into a stronger version"):
         with st.spinner("Rewriting your answer..."):
