@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1180" viewBox="0 0 1300 1180" role="img" font-family="Segoe UI, Arial, sans-serif">
+  <title>Pocket Interview Coach — AI/ML architecture</title>
+  <desc>Full pipeline: local speech ML feeding a Gemma 4 coach and a Fireworks-on-AMD hiring judge.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1 L8 5 L2 9" fill="none" stroke="#8888a0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1300" height="1180" fill="#0b0b12"/>
+
+  <!-- header -->
+  <text x="60" y="56" font-size="30" font-weight="800" fill="#2dd4ee">Pocket Interview Coach — AI / ML Architecture</text>
+  <text x="61" y="86" font-size="16" fill="#8888a0">Local speech ML  →  Gemma 4 coach  →  Fireworks-on-AMD hiring judge</text>
+
+  <!-- ===== BAND 1: INPUT ===== -->
+  <rect x="150" y="108" width="450" height="80" rx="12" fill="#12121f" stroke="#292942" stroke-width="1.5"/>
+  <text x="175" y="140" font-size="18" font-weight="700" fill="#f7f7fb">User Setup</text>
+  <text x="175" y="165" font-size="13" fill="#cfcfe6">role · company · JD · resume · persona · difficulty · timer</text>
+
+  <rect x="700" y="108" width="450" height="80" rx="12" fill="#12121f" stroke="#292942" stroke-width="1.5"/>
+  <text x="725" y="140" font-size="18" font-weight="700" fill="#f7f7fb">Voice Answer (per question)</text>
+  <text x="725" y="165" font-size="13" fill="#cfcfe6">recorded in-browser · streamlit-mic-recorder</text>
+
+  <line x1="925" y1="188" x2="925" y2="222" stroke="#8888a0" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="375" y1="188" x2="375" y2="500" stroke="#8888a0" stroke-width="2" stroke-dasharray="4 5" marker-end="url(#ah)"/>
+  <text x="388" y="360" font-size="12" fill="#8888a0" transform="rotate(90 388 360)">setup → question generation</text>
+
+  <!-- ===== BAND 2: LOCAL ML ===== -->
+  <rect x="90" y="222" width="1120" height="200" rx="14" fill="none" stroke="#9b6bff" stroke-width="1.5"/>
+  <rect x="90" y="222" width="330" height="34" rx="10" fill="#9b6bff"/>
+  <text x="108" y="245" font-size="15" font-weight="800" fill="#12061f">LOCAL ML  ·  on-device (CPU → ROCm-ready)</text>
+
+  <rect x="150" y="282" width="470" height="118" rx="12" fill="#12121f" stroke="#9b6bff" stroke-width="1"/>
+  <text x="172" y="314" font-size="18" font-weight="700" fill="#f7f7fb">faster-whisper — Speech-to-Text</text>
+  <text x="172" y="342" font-size="13" fill="#cfcfe6">OpenAI Whisper model · CTranslate2 engine · int8</text>
+  <text x="172" y="366" font-size="13" fill="#cfcfe6">your speech → text transcript</text>
+
+  <rect x="680" y="282" width="470" height="118" rx="12" fill="#12121f" stroke="#9b6bff" stroke-width="1"/>
+  <text x="702" y="314" font-size="18" font-weight="700" fill="#f7f7fb">librosa — Prosody / Delivery</text>
+  <text x="702" y="342" font-size="13" fill="#cfcfe6">pitch pYIN · words-per-minute · filler words</text>
+  <text x="702" y="366" font-size="13" fill="#cfcfe6">pause ratio · volume steadiness · timeline (numba JIT)</text>
+
+  <line x1="925" y1="422" x2="925" y2="456" stroke="#8888a0" stroke-width="2" marker-end="url(#ah)"/>
+
+  <!-- ===== BAND 3: COACH (GEMMA 4) ===== -->
+  <rect x="90" y="456" width="1120" height="252" rx="14" fill="none" stroke="#2dd4ee" stroke-width="1.5"/>
+  <rect x="90" y="456" width="300" height="34" rx="10" fill="#2dd4ee"/>
+  <text x="108" y="479" font-size="15" font-weight="800" fill="#04222a">COACH  ·  LLM #1</text>
+
+  <rect x="440" y="506" width="420" height="58" rx="12" fill="#12121f" stroke="#2dd4ee" stroke-width="1.5"/>
+  <text x="650" y="533" font-size="18" font-weight="700" fill="#2dd4ee" text-anchor="middle">Gemma 4</text>
+  <text x="650" y="553" font-size="12" fill="#cfcfe6" text-anchor="middle">google/gemma-4-26b-a4b-it · via OpenRouter</text>
+
+  <!-- coach feature chips row 1 -->
+  <g font-size="13.5" font-weight="600" fill="#f7f7fb">
+    <rect x="130" y="596" width="330" height="44" rx="8" fill="#1a1a2b" stroke="#292942"/>
+    <text x="295" y="623" text-anchor="middle">Question generation</text>
+    <rect x="485" y="596" width="330" height="44" rx="8" fill="#1a1a2b" stroke="#292942"/>
+    <text x="650" y="623" text-anchor="middle">Content + delivery scoring</text>
+    <rect x="840" y="596" width="330" height="44" rx="8" fill="#1a1a2b" stroke="#292942"/>
+    <text x="1005" y="623" text-anchor="middle">STAR-method detection</text>
+    <!-- row 2 -->
+    <rect x="130" y="648" width="330" height="44" rx="8" fill="#1a1a2b" stroke="#292942"/>
+    <text x="295" y="675" text-anchor="middle">Devil's-advocate follow-ups</text>
+    <rect x="485" y="648" width="330" height="44" rx="8" fill="#1a1a2b" stroke="#292942"/>
+    <text x="650" y="675" text-anchor="middle">Session report + top actions</text>
+    <rect x="840" y="648" width="330" height="44" rx="8" fill="#1a1a2b" stroke="#292942"/>
+    <text x="1005" y="675" text-anchor="middle">Personalized cheat sheet</text>
+  </g>
+
+  <line x1="925" y1="708" x2="925" y2="742" stroke="#8888a0" stroke-width="2" marker-end="url(#ah)"/>
+
+  <!-- ===== BAND 4: JUDGE (FIREWORKS / AMD) ===== -->
+  <rect x="90" y="742" width="1120" height="196" rx="14" fill="none" stroke="#ff8a5c" stroke-width="1.5"/>
+  <rect x="90" y="742" width="560" height="34" rx="10" fill="#ff8a5c"/>
+  <text x="108" y="765" font-size="15" font-weight="800" fill="#2a1005">HIRING MANAGER  ·  LLM #2  ·  Fireworks AI on AMD Instinct GPUs</text>
+
+  <rect x="440" y="790" width="420" height="58" rx="12" fill="#12121f" stroke="#ff8a5c" stroke-width="1.5"/>
+  <text x="650" y="817" font-size="18" font-weight="700" fill="#ff8a5c" text-anchor="middle">gpt-oss-120b (reasoning)</text>
+  <text x="650" y="837" font-size="12" fill="#cfcfe6" text-anchor="middle">served by Fireworks AI · AMD Instinct GPUs</text>
+
+  <g font-size="13.5" font-weight="600" fill="#f7f7fb">
+    <rect x="180" y="874" width="440" height="44" rx="8" fill="#1a1a2b" stroke="#292942"/>
+    <text x="360" y="901" text-anchor="middle">Independent hiring verdict</text>
+    <rect x="470" y="882" width="118" height="28" rx="14" fill="#27c98f"/>
+    <text x="529" y="901" font-size="12.5" font-weight="800" fill="#07130d" text-anchor="middle">HIRE ✓</text>
+    <rect x="680" y="874" width="440" height="44" rx="8" fill="#1a1a2b" stroke="#292942"/>
+    <text x="900" y="901" text-anchor="middle">"Level up this answer" rewrite</text>
+  </g>
+
+  <line x1="925" y1="938" x2="925" y2="972" stroke="#8888a0" stroke-width="2" marker-end="url(#ah)"/>
+
+  <!-- ===== BAND 5: OUTPUT ===== -->
+  <rect x="90" y="972" width="1120" height="34" rx="10" fill="#12121f" stroke="#292942"/>
+  <text x="108" y="995" font-size="15" font-weight="800" fill="#cfcfe6">OUTPUT  ·  what the candidate takes away</text>
+
+  <g font-size="13.5" font-weight="600" fill="#f7f7fb">
+    <rect x="90" y="1022" width="262" height="86" rx="12" fill="#12121f" stroke="#27c98f" stroke-width="1"/>
+    <text x="221" y="1058" text-anchor="middle">Readiness grade</text>
+    <text x="221" y="1080" font-size="12" font-weight="400" fill="#cfcfe6" text-anchor="middle">+ session summary</text>
+    <rect x="377" y="1022" width="262" height="86" rx="12" fill="#12121f" stroke="#27c98f" stroke-width="1"/>
+    <text x="508" y="1058" text-anchor="middle">Radar + trend charts</text>
+    <text x="508" y="1080" font-size="12" font-weight="400" fill="#cfcfe6" text-anchor="middle">Plotly gauges</text>
+    <rect x="664" y="1022" width="262" height="86" rx="12" fill="#12121f" stroke="#27c98f" stroke-width="1"/>
+    <text x="795" y="1058" text-anchor="middle">PDF / JSON / transcript</text>
+    <text x="795" y="1080" font-size="12" font-weight="400" fill="#cfcfe6" text-anchor="middle">fpdf2 export</text>
+    <rect x="951" y="1022" width="262" height="86" rx="12" fill="#12121f" stroke="#27c98f" stroke-width="1"/>
+    <text x="1082" y="1058" text-anchor="middle">JD keyword coverage</text>
+    <text x="1082" y="1080" font-size="12" font-weight="400" fill="#cfcfe6" text-anchor="middle">local text match</text>
+  </g>
+
+  <!-- loop note -->
+  <path d="M70 282 L58 282 L58 692 L70 692" fill="none" stroke="#9b6bff" stroke-width="1.5" stroke-dasharray="4 5"/>
+  <text x="52" y="490" font-size="12" fill="#9b6bff" text-anchor="middle" transform="rotate(-90 52 490)">repeats per question</text>
+</svg>

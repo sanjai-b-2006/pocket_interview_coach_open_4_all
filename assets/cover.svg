@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img">
+  <title>Pocket Interview Coach cover</title>
+  <desc>Cover image for Pocket Interview Coach — AI interview coach scoring content and delivery.</desc>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2dd4ee"/>
+      <stop offset="100%" stop-color="#9b6bff"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="720" fill="#0b0b12"/>
+  <rect x="16" y="16" width="1248" height="688" rx="24" fill="none" stroke="#23233a" stroke-width="2"/>
+
+  <!-- LEFT: title block -->
+  <rect x="80" y="120" width="470" height="40" rx="20" fill="rgba(45,212,238,0.10)" stroke="rgba(45,212,238,0.5)" stroke-width="1.5"/>
+  <text x="104" y="146" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="1.5" fill="#2dd4ee">AMD DEVELOPER HACKATHON  ·  UNICORN TRACK</text>
+
+  <text x="78" y="270" font-family="Segoe UI, Arial, sans-serif" font-size="86" font-weight="800" fill="url(#grad)">Pocket</text>
+  <text x="78" y="360" font-family="Segoe UI, Arial, sans-serif" font-size="86" font-weight="800" fill="url(#grad)">Interview</text>
+  <text x="78" y="450" font-family="Segoe UI, Arial, sans-serif" font-size="86" font-weight="800" fill="url(#grad)">Coach</text>
+
+  <text x="82" y="512" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="600" fill="#e9e4ff">Scores what you say — and how you say it.</text>
+
+  <!-- badges -->
+  <circle cx="92" cy="566" r="7" fill="#2dd4ee"/>
+  <text x="112" y="573" font-family="Segoe UI, Arial, sans-serif" font-size="21" fill="#cfcfe6">Gemma 4  —  your coach</text>
+  <circle cx="92" cy="606" r="7" fill="#ff8a5c"/>
+  <text x="112" y="613" font-family="Segoe UI, Arial, sans-serif" font-size="21" fill="#cfcfe6">Fireworks on AMD  —  the hiring manager</text>
+  <circle cx="92" cy="646" r="7" fill="#9b6bff"/>
+  <text x="112" y="653" font-family="Segoe UI, Arial, sans-serif" font-size="21" fill="#cfcfe6">Voice-first delivery scoring</text>
+
+  <!-- RIGHT: mock report card -->
+  <rect x="700" y="150" width="500" height="420" rx="24" fill="#12121f" stroke="#292942" stroke-width="1.5"/>
+  <text x="732" y="200" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="1.5" fill="#8888a0">SESSION REPORT</text>
+
+  <!-- gauge 1: Content 82 -->
+  <circle cx="828" cy="300" r="58" fill="none" stroke="#23233a" stroke-width="14"/>
+  <circle cx="828" cy="300" r="58" fill="none" stroke="#9b6bff" stroke-width="14" stroke-linecap="round"
+          stroke-dasharray="299 365" transform="rotate(-90 828 300)"/>
+  <text x="828" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="38" font-weight="800" fill="#f7f7fb" text-anchor="middle">82</text>
+  <text x="828" y="320" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8888a0" text-anchor="middle">Content</text>
+
+  <!-- gauge 2: Delivery 74 -->
+  <circle cx="1072" cy="300" r="58" fill="none" stroke="#23233a" stroke-width="14"/>
+  <circle cx="1072" cy="300" r="58" fill="none" stroke="#2dd4ee" stroke-width="14" stroke-linecap="round"
+          stroke-dasharray="270 365" transform="rotate(-90 1072 300)"/>
+  <text x="1072" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="38" font-weight="800" fill="#f7f7fb" text-anchor="middle">74</text>
+  <text x="1072" y="320" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8888a0" text-anchor="middle">Delivery</text>
+
+  <!-- verdict pill -->
+  <rect x="748" y="424" width="404" height="60" rx="30" fill="#27c98f"/>
+  <text x="950" y="463" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="800" fill="#07130d" text-anchor="middle">STRONG HIRE</text>
+  <text x="950" y="524" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#8888a0" text-anchor="middle">Fireworks AI on AMD  ·  88% confidence</text>
+</svg>
