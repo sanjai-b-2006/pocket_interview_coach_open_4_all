@@ -54,11 +54,21 @@ docker build -t pocket-interview-open .
 docker run -p 8501:8501 --env-file .env pocket-interview-open
 ```
 
+## Two ways to run it publicly
+
+- **Everyone brings their own key (recommended for a public link).** Do **not** set
+  `OPENROUTER_API_KEY`. On load, each visitor sees a one-time screen asking for their own OpenRouter
+  key — it's used for both the coach and the judge, kept in their browser session only, and never
+  stored. Your credits are never touched.
+- **You provide the key for everyone.** Set `OPENROUTER_API_KEY` in Secrets and the app just works
+  with no gate — but every visitor spends *your* credits. (Set `REQUIRE_USER_KEY = "true"` to force
+  the bring-your-own-key screen even when a default key exists.)
+
 ## Deploying to Streamlit Community Cloud (free)
 
 1. Push this repo to GitHub (public).
 2. Go to **share.streamlit.io** → **New app** → select this repo, branch `main`, main file `app.py`.
-3. Under **Advanced settings → Secrets**, add:
+3. Under **Advanced settings → Secrets**, either leave it empty (visitors bring their own key) or add:
    ```toml
    OPENROUTER_API_KEY = "your_openrouter_key"
    COACH_MODEL = "google/gemma-4-26b-a4b-it"
@@ -75,6 +85,7 @@ docker run -p 8501:8501 --env-file .env pocket-interview-open
 | `COACH_MODEL` | Coach model slug (default `google/gemma-4-26b-a4b-it`) |
 | `JUDGE_MODEL` | Independent judge model (default `openai/gpt-4o-mini`) |
 | `JUDGE_API_KEY` / `JUDGE_BASE_URL` | Optional — put the judge on a different key/endpoint |
+| `REQUIRE_USER_KEY` | `true` to always show the bring-your-own-key screen (default `false`) |
 | `ASR_MODEL_SIZE` | `base` (default) — use `tiny` on memory-constrained hosts |
 | `ENABLE_PITCH_ANALYSIS` | `true` (default) — `false` to skip the heavier pitch pass |
 

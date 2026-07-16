@@ -35,21 +35,25 @@ def _extract_json(text: str) -> Dict[str, Any]:
 
 
 class JudgeClient:
-    def is_configured(self) -> bool:
-        return bool(settings.judge_api_key)
+    def is_configured(self, api_key: str = None) -> bool:
+        return bool(api_key or settings.judge_api_key)
 
-    def _chat(self, system: str, user: str, max_tokens: int = 1200) -> str:
-        if not settings.judge_api_key:
+    def _chat(self, system: str, user: str, max_tokens: int = 1200,
+              api_key: str = None, base_url: str = None, model: str = None) -> str:
+        key = api_key or settings.judge_api_key
+        burl = base_url or settings.judge_base_url
+        mdl = model or settings.judge_model
+        if not key:
             raise JudgeError(
                 "No judge API key configured. Set JUDGE_API_KEY (or OPENROUTER_API_KEY) to enable "
                 "the independent hiring verdict."
             )
         try:
             resp = httpx.post(
-                f"{settings.judge_base_url.rstrip('/')}/chat/completions",
-                headers={"Authorization": f"Bearer {settings.judge_api_key}"},
+                f"{burl.rstrip('/')}/chat/completions",
+                headers={"Authorization": f"Bearer {key}"},
                 json={
-                    "model": settings.judge_model,
+                    "model": mdl,
                     "messages": [
                         {"role": "system", "content": system},
                         {"role": "user", "content": user},
@@ -81,7 +85,8 @@ class JudgeClient:
             )
         return content
 
-    def hiring_verdict(self, session: InterviewSession) -> Dict[str, Any]:
+    def hiring_verdict(self, session: InterviewSession,
+                       api_key: str = None, base_url: str = None, model: str = None) -> Dict[str, Any]:
         """Have the judge model make an actual hire/no-hire call on the whole session."""
         transcript_block = "\n".join(
             f"- Q: {q.text}\n  A: {q.answer.transcript}\n"
@@ -109,7 +114,8 @@ class JudgeClient:
             f"Full interview:\n{transcript_block}\n\n"
             "Make your hiring recommendation now."
         )
-        data = _extract_json(self._chat(system, user, max_tokens=1400))
+        data = _extract_json(self._chat(system, user, max_tokens=1400,
+                                        api_key=api_key, base_url=base_url, model=model))
         # Models sometimes emit Unicode dashes (non-breaking hyphen / en-dash) instead of ASCII
         # "-", which would silently break the decision + color lookup. Normalize before matching.
         decision = str(data.get("decision", "")).replace("‑", "-").replace("–", "-").strip()
@@ -119,7 +125,8 @@ class JudgeClient:
         data["decision"] = decision
         return data
 
-    def rewrite_answer(self, question: str, transcript: str, role: str) -> str:
+    def rewrite_answer(self, question: str, transcript: str, role: str,
+                       api_key: str = None, base_url: str = None, model: str = None) -> str:
         """Rewrite the candidate's actual answer into a stronger version of *their own* answer."""
         system = (
             "You are an elite interview coach. Rewrite the candidate's answer into a stronger "
@@ -130,7 +137,8 @@ class JudgeClient:
             "written). Respond ONLY with a JSON object: {\"improved_answer\": \"...\"}."
         )
         user = f"Role: {role}\nQuestion: {question}\nCandidate's actual answer: {transcript}\n"
-        data = _extract_json(self._chat(system, user, max_tokens=1400))
+        data = _extract_json(self._chat(system, user, max_tokens=1400,
+                                        api_key=api_key, base_url=base_url, model=model))
         return data.get("improved_answer", "").strip()
 
 
