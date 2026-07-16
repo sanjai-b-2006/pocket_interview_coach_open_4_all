@@ -1,0 +1,9 @@
+.env
+SUBMISSION.md
+__pycache__/
+**/__pycache__/
+*.db
+venv/
+.venv/
+*.pptx
+*.mp4
